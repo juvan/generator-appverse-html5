@@ -41,10 +41,30 @@ module.exports = yeoman.generators.Base.extend({
         );
     },
 
+    addNpmDependencies: function() {
+        var filePath = this.destinationPath('package.json');
+        var packageJson = this.fs.readJSON(filePath);
+        packageJson.devDependencies.lodash = '^3.3.1';
+        packageJson.devDependencies.promise = '^6.1.0';
+        packageJson.devDependencies.plist = '^1.1.0';
+        packageJson.devDependencies['grunt-contrib-compress'] = '^0.13.0';
+        packageJson.devDependencies['grunt-http-upload'] = '^0.1.8';
+        this.fs.writeJSON(filePath, packageJson);
+    },
+
     // Following functions modify the Gruntfile to add mobile builds support
     addGruntDependencies: function() {
         this.gruntfile.insertVariable( '_', "require('lodash')" );
         this.gruntfile.insertVariable( 'mobileDistDownloader', "require('./config/grunt-helpers/download-mobile-dist')" );
+    },
+
+    addGruntVariables: function() {
+        this.gruntfile.insertVariable('mobileBuilder', "{" +
+            "// Remote mobile builer\n" +
+            "host: 'builder.gft.com'," +
+            "// Ensure this is equal to your app.name in the build.properties file\n" +
+            "appName: 'TimeTracker'" +
+        "}");
     },
 
     addGruntTasks: function() {
