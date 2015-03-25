@@ -25,7 +25,8 @@ var yeomanConfig = {
     app: 'app',
     dist: 'dist',
     doc: 'doc',
-    server: 'server'
+    server: 'server',
+    mobileDist: 'dist/mobile',
 };
 
 var httpMethods = function (request, response, next) {
@@ -259,7 +260,9 @@ module.exports = function (grunt) {
                 }]
             },
             server: '.tmp',
-            doc: 'doc'
+            doc: 'doc',
+            mobileBuilderBundle: '.tmp/mobile-build-bundle.zip',
+            mobileDist: '<%= yeoman.mobileDist %>'
         },
         jshint: {
             options: {
@@ -436,6 +439,24 @@ module.exports = function (grunt) {
                 cwd: '<%= yeoman.app %>/bower_components/bootstrap-sass-official/assets/fonts',
                 dest: '.tmp/fonts',
                 src: '**/*'
+            },
+            // Takes the structure required by the mobile builder and the emulator, and fills  it with
+            // the the dist version of the app.
+            mobile: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'config/mobile-builder-bundle',
+                        src: '**',
+                        dest: '<%= yeoman.mobileDist %>/emulator'
+                    },
+                    {
+                        expand: true,
+                        cwd: '<%= yeoman.webDist %>',
+                        src: '**',
+                        dest: '<%= yeoman.mobileDist %>/emulator/Web/WebResources/www/'
+                    },
+                ]
             }
         },
         concurrent: {
