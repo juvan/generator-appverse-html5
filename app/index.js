@@ -96,7 +96,12 @@ module.exports = yeoman.generators.Base.extend({
                         '\n Application name cannot contain special characters or a blank space. ' +
                         '\n Name will be slug if needed.  ',
                     default: slug.slugify(this.appname)
-        }, {
+                }, {
+                    name: 'mobileBuildSupport',
+                    type: 'confirm',
+                    message: 'Do you want to add build capabilities for native mobile platforms?',
+                    default: false
+                }, {
                     type: 'checkbox',
                     name: 'coreOptions',
                     message: "Select core modules. \n You can add the modules later executing the subgenerators",
@@ -176,6 +181,7 @@ module.exports = yeoman.generators.Base.extend({
             }
             if (prompts.length > 0) {
                 this.appName = slug.slugify(props.appName);
+                this.mobileBuildSupport = props.mobileBuildSupport;
                 var coreOptions = props.coreOptions;
 
                 // manually deal with the response, get back and store the results.
@@ -366,6 +372,13 @@ module.exports = yeoman.generators.Base.extend({
 
     },
     install: function () {
+
+        if(this.mobileBuildSupport) {
+            this.composeWith('appverse-html5:mobile', {
+                options: {}
+            });
+        }
+
         if (this.appRest) {
             this.composeWith('appverse-html5:rest', {
                 options: {
