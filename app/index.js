@@ -72,7 +72,7 @@ module.exports = yeoman.generators.Base.extend({
     },
     prompting: function () {
         var done = this.async();
-        console.log(chalk.bgBlack.cyan('\n' +
+        this.log(chalk.bgBlack.cyan('\n' +
             '                 __    __                    \n' +
             '   __ _ _ __  _ _\\ \\  / /__ _ __ ___  ___    \n' +
             '  / _| | |_ \\| |_ \\ \\/ / _ | |__/ __|/ _ \\   \n' +

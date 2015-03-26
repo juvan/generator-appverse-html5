@@ -20,21 +20,31 @@
  */
 'use strict';
 
-var path = require('path');
-var assert = require('yeoman-generator').assert;
+var path    = require('path');
+var assert  = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
+var fs      = require('fs-extra');
+var os      = require('os');
 
 describe('AppverseHtml5:rest', function () {
-  before(function (done) {
+ /* before(function (done) {
     helpers.run(path.join(__dirname, '../rest'))
+      .inDir(path.join(os.tmpdir(), './temp-test'), function(dir) {
+        // Construct test scenario. Copy templates to the temp-test directory
+        fs.copySync(path.join(__dirname, '../app/templates'), dir);
+      })
       .withArguments('name', '--force')
       .withOptions({ 'skip-install': true })
       .on('end', done);
   });
 
-  it('creates files', function () {
-    assert.file([
-      'somefile.js'
-    ]);
+  it('includes scripts', function () {
+    assert.fileContent('app/index.html',
+      'src="bower_components/appverse-web-html5-core/dist/appverse-rest/appverse-rest.min.js"');
   });
+
+  it('adds dependency to the main app module', function() {
+      assert.fileContent('app/scripts/app.js', 'appverse.rest');
+  });*/
+
 });

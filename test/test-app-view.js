@@ -20,21 +20,30 @@
  */
 'use strict';
 
-var path = require('path');
-var assert = require('yeoman-generator').assert;
+var path    = require('path');
+var assert  = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
+var fs      = require('fs-extra');
+var os      = require('os');
 
 describe('AppverseHtml5:app-view', function () {
   before(function (done) {
     helpers.run(path.join(__dirname, '../app-view'))
-      .withArguments('name', '--force')
+      .inDir(path.join(os.tmpdir(), './temp-test-app-view'), function(dir) {
+        // Construct test scenario. Copy templates to the temp-test directory
+        fs.copySync(path.join(__dirname, '../app/templates'), dir)
+      })
+      .withArguments('myview', '--force')
       .withOptions({ 'skip-install': true })
       .on('end', done);
   });
 
   it('creates files', function () {
     assert.file([
-      'somefile.js'
+      'app/views/myview/myview.html',
+      'app/scripts/controllers/myview-controller.js',
     ]);
   });
 });
+
+

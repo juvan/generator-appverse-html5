@@ -20,6 +20,9 @@
     "globals": {
         "angular": false,
         "alert": false,
-        "Unity": false
+        "Unity": false,
+        "before" : false,
+        "it" :false,
+        "describe" : false
     }
 }

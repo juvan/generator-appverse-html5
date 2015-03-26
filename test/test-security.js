@@ -20,21 +20,36 @@
  */
 'use strict';
 
-var path = require('path');
-var assert = require('yeoman-generator').assert;
+var path    = require('path');
+var assert  = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
+var fs      = require('fs-extra');
+var os      = require('os');
 
 describe('AppverseHtml5:security', function () {
+
   before(function (done) {
     helpers.run(path.join(__dirname, '../security'))
+      .inDir(path.join(os.tmpdir(), './temp-test-security'), function(dir) {
+        // Construct test scenario. Copy templates to the temp-test directory
+        fs.copySync(path.join(__dirname, '../app/templates'), dir);
+      })
       .withArguments('name', '--force')
       .withOptions({ 'skip-install': true })
+      .on('ready', function(generator) {
+        // mock bower install
+        generator.bowerInstall = function() {};
+      })
       .on('end', done);
   });
 
-  it('creates files', function () {
-    assert.file([
-      'somefile.js'
-    ]);
+  it('includes scripts', function () {
+    assert.fileContent('app/index.html',
+      'src="bower_components/appverse-web-html5-security/dist/appverse-html5-security.min.js"');
   });
+
+  it('adds dependency to the main app module', function() {
+      assert.fileContent('app/scripts/app.js', 'appverse.security');
+  });
+
 });
