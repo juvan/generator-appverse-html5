@@ -41,17 +41,6 @@ module.exports = yeoman.generators.Base.extend({
         );
     },
 
-    addNpmDependencies: function() {
-        var filePath = this.destinationPath('package.json');
-        var packageJson = this.fs.readJSON(filePath);
-        packageJson.devDependencies.lodash = '^3.3.1';
-        packageJson.devDependencies.promise = '^6.1.0';
-        packageJson.devDependencies.plist = '^1.1.0';
-        packageJson.devDependencies['grunt-contrib-compress'] = '^0.13.0';
-        packageJson.devDependencies['grunt-http-upload'] = '^0.1.8';
-        this.fs.writeJSON(filePath, packageJson);
-    },
-
     // Following functions modify the Gruntfile to add mobile builds support
     addGruntDependencies: function() {
         this.gruntfile.insertVariable( '_', "require('lodash')" );
@@ -63,7 +52,10 @@ module.exports = yeoman.generators.Base.extend({
             "// Remote mobile builer\n" +
             "host: 'builder.gft.com'," +
             "// Ensure this is equal to your app.name in the build.properties file\n" +
-            "appName: 'TimeTracker'" +
+            "appName: 'YourAppName'," +
+            "// Credentials\n" +
+            "username: ''," +
+            "password: ''," +
         "}");
     },
 
@@ -83,7 +75,7 @@ module.exports = yeoman.generators.Base.extend({
         this.gruntfile.gruntfile.assignment('module.exports').value().body.append(
             "grunt.registerTask('download_mobile_build', function () {" +
                 "var done = this.async();" +
-                "var downloadPath = yeoman.mobileDist;" +
+                "var downloadPath = yeomanConfig.mobileDist;" +
                 "var downloadOptions = {" +
                 "    host: mobileBuilder.host," +
                 "    baseUrl: '/builder/dist/' + grunt.option('buildId')," +
@@ -91,9 +83,9 @@ module.exports = yeoman.generators.Base.extend({
                 "};" +
                 "" +
                 "grunt.log.writeln('Build available at https://' + downloadOptions.host + downloadOptions.baseUrl);" +
-                "grunt.file.mkdir(yeoman.mobileDist);" +
-                "grunt.file.mkdir(yeoman.mobileDist + '/ios');" +
-                "grunt.file.mkdir(yeoman.mobileDist + '/android');" +
+                "grunt.file.mkdir(yeomanConfig.mobileDist);" +
+                "grunt.file.mkdir(yeomanConfig.mobileDist + '/ios');" +
+                "grunt.file.mkdir(yeomanConfig.mobileDist + '/android');" +
                 "" +
                 "mobileDistDownloader(downloadOptions)" +
                 "    .downloadIn(downloadPath)" +
@@ -142,7 +134,7 @@ module.exports = yeoman.generators.Base.extend({
             "        method: 'POST'," +
             "        rejectUnauthorized: false," +
             "        headers: {" +
-            "            'Authorization': 'Basic ' + new Buffer('user:password').toString('base64')" +
+            "            'Authorization': 'Basic ' + new Buffer(mobileBuilder.username + ':' + mobileBuilder.password).toString('base64')" +
             "        }," +
             "        data: {" +
             "            // Addresses where to email the result (separated by commas)\n" +
@@ -155,7 +147,7 @@ module.exports = yeoman.generators.Base.extend({
             "            var buildId = match[2];" +
             "            grunt.option('buildId', buildId);" +
             "            grunt.log.writeln('Builder server generated build with id: ' + buildId);" +
-            "            grunt.file.write(yeoman.mobileDist + '/build.log', data);" +
+            "            grunt.file.write(yeomanConfig.mobileDist + '/build.log', data);" +
             "        }" +
             "    }," +
             "    src: '.tmp/mobile-build-bundle.zip'," +
@@ -179,11 +171,10 @@ module.exports = yeoman.generators.Base.extend({
             "            }" +
             "        ]" +
             "    }," +
-            "    files: {" +
-            "        '<%= yeoman.mobileDist %>/ios/<%= appName %>.plist': [" +
-            "            '<%= yeoman.mobileDist %>/ios/<%= appName %>.plist'" +
-            "        ]" +
-            "    }" +
+            "    files: [{" +
+            "        src : '<%= yeoman.mobileDist %>/ios/' + mobileBuilder.appName + '.plist'," +
+            "        dest: '<%= yeoman.mobileDist %>/ios/' + mobileBuilder.appName + '.plist'" +
+            "    }]" +
             "}," +
             "mobileZipUrl: {" +
             "    options: {" +
@@ -228,5 +219,19 @@ module.exports = yeoman.generators.Base.extend({
             "    }" +
             "}" +
         "}");
+    },
+
+    install : function () {
+        this.npmInstall ([
+            'lodash#^3.3.1',
+            'promise#^6.1.0',
+            'plist#^1.1.0',
+            'grunt-contrib-compress#^0.13.0',
+            'grunt-http-upload#^0.1.8',
+            'grunt-replace#^0.8.0',
+        ],
+        {
+            saveDev: true
+        });
     }
 });

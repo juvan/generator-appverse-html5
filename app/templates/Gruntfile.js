@@ -24,9 +24,10 @@ var delayApiCalls = function (request, response, next) {
 var yeomanConfig = {
     app: 'app',
     dist: 'dist',
-    doc: 'doc',
-    server: 'server',
+    webDist: 'dist/web',
     mobileDist: 'dist/mobile',
+    doc: 'doc',
+    server: 'server'
 };
 
 var httpMethods = function (request, response, next) {
@@ -220,7 +221,7 @@ module.exports = function (grunt) {
                         return [
                             delayApiCalls,
                             mountFolder(connect, yeomanConfig.server),
-                            mountFolder(connect, yeomanConfig.dist),
+                            mountFolder(connect, yeomanConfig.webDist),
                             httpMethods
                         ];
                     }
@@ -316,10 +317,10 @@ module.exports = function (grunt) {
             dist: {
                 files: {
                     src: [
-                        '<%= yeoman.dist %>/scripts/**/*.js',
-                        '<%= yeoman.dist %>/styles/**/*.css',
-                        '<%= yeoman.dist %>/styles/images/**/*',
-                        '<%= yeoman.dist %>/fonts/**/*'
+                        '<%= yeoman.webDist %>/scripts/**/*.js',
+                        '<%= yeoman.webDist %>/styles/**/*.css',
+                        '<%= yeoman.webDist %>/styles/images/**/*',
+                        '<%= yeoman.webDist %>/fonts/**/*.{eot,svg,ttf,woff,woff2}'
                     ]
                 }
             }
@@ -327,15 +328,15 @@ module.exports = function (grunt) {
         useminPrepare: {
             html: '<%= yeoman.app %>/index.html',
             options: {
-                dest: '<%= yeoman.dist %>'
+                dest: '<%= yeoman.webDist %>'
             }
         },
         usemin: {
-            html: ['<%= yeoman.dist %>/*.html', '<%= yeoman.dist %>/views/**/*.html'],
-            css: '<%= yeoman.dist %>/styles/**/*.css',
-            js: '<%= yeoman.dist %>/scripts/**/*.js',
+            html: ['<%= yeoman.webDist %>/*.html', '<%= yeoman.webDist %>/views/**/*.html'],
+            css: '<%= yeoman.webDist %>/styles/**/*.css',
+            js: '<%= yeoman.webDist %>/scripts/**/*.js',
             options: {
-                assetsDirs: ['<%= yeoman.dist %>/**']
+                assetsDirs: ['<%= yeoman.webDist %>/**']
             }
         },
         imagemin: {
@@ -344,7 +345,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= yeoman.app %>',
                     src: 'styles/images/**/*.{jpg,jpeg,svg,gif,png}',
-                    dest: '<%= yeoman.dist %>'
+                    dest: '<%= yeoman.webDist %>'
                 }]
             }
         },
@@ -366,13 +367,13 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: '<%= yeoman.dist %>',
+                    cwd: '<%= yeoman.webDist %>',
                     src: [
                         '*.html',
                         'views/**/*.html',
                         'template/**/*.html'
                     ],
-                    dest: '<%= yeoman.dist %>'
+                    dest: '<%= yeoman.webDist %>'
                 }]
             }
         },
@@ -383,7 +384,7 @@ module.exports = function (grunt) {
                     expand: true,
                     dot: true,
                     cwd: '<%= yeoman.app %>',
-                    dest: '<%= yeoman.dist %>',
+                    dest: '<%= yeoman.webDist %>',
                     src: [
                         '*.{ico,png,txt}',
                         '.htaccess',
@@ -398,17 +399,17 @@ module.exports = function (grunt) {
                 }, {
                     expand: true,
                     cwd: '<%= yeoman.app %>/bower_components/bootstrap-sass-official/assets/fonts',
-                    dest: '<%= yeoman.dist %>/fonts',
+                    dest: '<%= yeoman.webDist %>/fonts',
                     src: '**/*'
                 }, {
                     expand: true,
                     cwd: '.tmp/images',
-                    dest: '<%= yeoman.dist %>/images',
+                    dest: '<%= yeoman.webDist %>/images',
                     src: 'generated/*'
                 }, {
                     expand: true,
                     cwd: '<%= yeoman.app %>/bower_components/angular-i18n',
-                    dest: '<%= yeoman.dist %>/resources/i18n/angular',
+                    dest: '<%= yeoman.webDist %>/resources/i18n/angular',
                     src: [
                         '*en-us.js',
                         '*es-es.js',

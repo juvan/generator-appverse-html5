@@ -53,10 +53,11 @@
   "devDependencies": {
     "fs-extra": "^0.16.5",
     "gulp": "^3.8.11",
-    "gulp-util": "^3.0.4",
     "gulp-spawn-mocha": "^2.0.1",
+    "gulp-util": "^3.0.4",
     "gulp-watch": "^4.2.0",
-    "mocha": "*"
+    "mocha": "*",
+    "sinon": "^1.14.1"
   },
   "peerDependencies": {
     "yo": ">=1.4.0"

@@ -99,7 +99,7 @@ module.exports = yeoman.generators.Base.extend({
                 }, {
                     name: 'mobileBuildSupport',
                     type: 'confirm',
-                    message: 'Do you want to add build capabilities for native mobile platforms?',
+                    message: 'Do you want to add build capabilities for native mobile platforms? (experimental)',
                     default: false
                 }, {
                     type: 'checkbox',
