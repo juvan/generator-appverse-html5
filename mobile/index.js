@@ -50,7 +50,7 @@ module.exports = yeoman.generators.Base.extend({
     addGruntVariables: function() {
         this.gruntfile.insertVariable('mobileBuilder', "{" +
             "// Remote mobile builer\n" +
-            "host: 'builder.gft.com'," +
+            "host: 'your.builder.hostame'," +
             "// Ensure this is equal to your app.name in the build.properties file\n" +
             "appName: 'YourAppName'," +
             "// Credentials\n" +

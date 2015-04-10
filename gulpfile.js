@@ -6,11 +6,11 @@ var mocha = require('gulp-spawn-mocha');
 
 // Watch for changes
 gulp.task('watch', function () {
-    gulp.watch(['*/*.js'], ['mocha']);
+    gulp.watch(['*/*.js'], ['test']);
 });
 
 // Run tests with mocha
-gulp.task('mocha', function() {
+gulp.task('test', function() {
     return gulp.src(['test/*.js'], {read: false})
         .pipe(mocha())
         .on('error', gutil.log);
